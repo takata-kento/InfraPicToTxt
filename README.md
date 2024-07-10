@@ -1,0 +1,2 @@
+# InfraPicToTxt
+画像文字列抽出APIのAWSインフラ環境構築用repo
