@@ -27,4 +27,4 @@ docker image pulumi/pulumi-nodejs:3.124.0をdockerhubよりプル
 docker image python:3.12をdockerhubよりプル
 `docker pull python:3.12`
 プルしたイメージをもとにコンテナ作成
-```docker run --name pythonServerPicToTextInfra -d -it --mount type=bind,source={OS絶対ディレクトリ},target=/home/InfraPicToTxt docker pull python:3.12 /bin/bash```
+```docker run --name pythonServerPicToTextInfra -d -it --mount type=bind,source={OS絶対ディレクトリ},target=/home/InfraPicToTxt python:3.12 /bin/bash```
