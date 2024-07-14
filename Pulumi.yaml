@@ -1,0 +1,10 @@
+name: infraPicToTxt
+runtime:
+  name: nodejs
+  options:
+    packagemanager: npm
+description: Creating AWS PicToTxt environment using TypeScript
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: aws-typescript
