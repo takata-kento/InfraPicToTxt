@@ -7,15 +7,24 @@ Amazon Bedrockを使用した画像に表示されている文字列を抽出す
 
 ## 使用している環境
 * pulumi バージョン3.124.0
-* TypeScript
+* TypeScript バージョン18.20.4
   * pulumi実装に使用
+* Python バージョン3.12
 
 ## クラス構成
 <image width=50% src="./.docs/PicToTextInfraClass.drawio.svg">
 
 ## ローカル環境構築
+
+### pulumi
 docker image pulumi/pulumi-nodejs:3.124.0をdockerhubよりプル
 `docker pull pulumi/pulumi-nodejs:3.124.0`
 プルしたイメージをもとにコンテナ作成
-```docker run --name pulumiNodeServer -d -it --mount type=bind,source={OS絶対ディレクトリ},target=/pulumi/projects pulumi/pulumi-nodejs:3.124.0 /bin/bash```
+```docker run --name pulumiNodeServerPicToTextInfra -d -it --mount type=bind,source={OS絶対ディレクトリ},target=/pulumi/projects pulumi/pulumi-nodejs:3.124.0 /bin/bash```
 ※ ローカルでデプロイまで行う場合は`--env AWS_ACCESS_KEY_ID={設定値} --env AWS_SECRET_ACCESS_KEY={設定値} --env PULUMI_ACCESS_TOKEN={設定値}` を追加
+
+### python
+docker image python:3.12をdockerhubよりプル
+`docker pull python:3.12`
+プルしたイメージをもとにコンテナ作成
+```docker run --name pythonServerPicToTextInfra -d -it --mount type=bind,source={OS絶対ディレクトリ},target=/home/InfraPicToTxt docker pull python:3.12 /bin/bash```
