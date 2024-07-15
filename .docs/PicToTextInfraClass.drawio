@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-07-15T09:01:58.507Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36" etag="2bM1NDIXZ9r_vK2AZ85_" version="24.6.5" type="device">
+<mxfile host="app.diagrams.net" modified="2024-07-15T16:25:05.400Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36" etag="tgZtGvcQiDQiDMs6lFZ8" version="24.6.5" type="device">
   <diagram name="Page-1" id="9f46799a-70d6-7492-0946-bef42562c5a5">
     <mxGraphModel dx="1674" dy="841" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
       <root>
@@ -25,7 +25,7 @@
         <mxCell id="78961159f06e98e8-38" value="" style="line;html=1;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="78961159f06e98e8-30" vertex="1">
           <mxGeometry y="156" width="240" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="DzEdQuTOkfnMJAc7aqNY-2" value="+ constructor(&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; 関数実行ロールARN: String,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; 関数名: String,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; 関数ランタイム: String,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; 関数ソースファイル名: String,&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; タグ:&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;(@pulumi/aws)Tags&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; )&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="78961159f06e98e8-30">
+        <mxCell id="DzEdQuTOkfnMJAc7aqNY-2" value="+ constructor(&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; 関数実行ロールARN: String,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; 関数名: String,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; 関数ランタイム: String,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; 関数ソースファイル名: String,&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; タグ:&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;(@pulumi/aws)Tags&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; )&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="78961159f06e98e8-30" vertex="1">
           <mxGeometry y="164" width="240" height="110" as="geometry" />
         </mxCell>
         <mxCell id="78961159f06e98e8-39" value="+ createFunc(&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; (@pulumi/aws)Provider&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp;): (@pulumi/aws/lambda)Function&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="78961159f06e98e8-30" vertex="1">
@@ -67,7 +67,7 @@
         <mxCell id="xMMDIXil7vFxodbTR-LS-23" value="" style="line;html=1;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="xMMDIXil7vFxodbTR-LS-16" vertex="1">
           <mxGeometry y="172" width="240" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="DzEdQuTOkfnMJAc7aqNY-3" value="+ constructor(&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; API名: String,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; メソッド: (@pulumi/aws-apigateway)Method,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; パス: String,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; ステージ名: String,&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; タグ:&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;(@pulumi/aws)Tags&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; )&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="xMMDIXil7vFxodbTR-LS-16">
+        <mxCell id="DzEdQuTOkfnMJAc7aqNY-3" value="+ constructor(&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; API名: String,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; メソッド: (@pulumi/aws-apigateway)Method,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; パス: String,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; ステージ名: String,&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; タグ:&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;(@pulumi/aws)Tags&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; )&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="xMMDIXil7vFxodbTR-LS-16" vertex="1">
           <mxGeometry y="180" width="240" height="130" as="geometry" />
         </mxCell>
         <mxCell id="xMMDIXil7vFxodbTR-LS-24" value="+ createApiGateway(&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; (@pulumi/aws)Provider&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp;): {&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; (@pulumi/aws-apigateway)RestApi&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;}&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="xMMDIXil7vFxodbTR-LS-16" vertex="1">
@@ -98,7 +98,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="xMMDIXil7vFxodbTR-LS-35" value="IAMRole" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;swimlaneFillColor=#ffffff;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;fillColor=none;fontFamily=Verdana;fontSize=12" parent="1" vertex="1">
-          <mxGeometry x="110" y="30" width="240" height="342" as="geometry" />
+          <mxGeometry x="110" y="30" width="240" height="420" as="geometry" />
         </mxCell>
         <mxCell id="xMMDIXil7vFxodbTR-LS-36" value="- ロール名: String" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="xMMDIXil7vFxodbTR-LS-35" vertex="1">
           <mxGeometry y="26" width="240" height="26" as="geometry" />
@@ -115,7 +115,7 @@
         <mxCell id="xMMDIXil7vFxodbTR-LS-40" value="" style="line;html=1;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="xMMDIXil7vFxodbTR-LS-35" vertex="1">
           <mxGeometry y="130" width="240" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="DzEdQuTOkfnMJAc7aqNY-1" value="+ constructor(&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; ロール名: String,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; ポリシー名: String,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; ポリシーファイル名: String,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; タグ:&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;(@pulumi/aws)Tags&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; )&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="xMMDIXil7vFxodbTR-LS-35">
+        <mxCell id="DzEdQuTOkfnMJAc7aqNY-1" value="+ constructor(&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; ロール名: String,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; ポリシー名: String,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; ポリシーファイル名: String,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; タグ:&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;(@pulumi/aws)Tags&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; )&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="xMMDIXil7vFxodbTR-LS-35" vertex="1">
           <mxGeometry y="138" width="240" height="90" as="geometry" />
         </mxCell>
         <mxCell id="xMMDIXil7vFxodbTR-LS-41" value="+ createIAMRole(&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; (@pulumi/aws)Provider&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp;): (@pulumi/aws/iam)Role&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="xMMDIXil7vFxodbTR-LS-35" vertex="1">
@@ -124,7 +124,10 @@
         <mxCell id="xMMDIXil7vFxodbTR-LS-52" value="- createPolicy(&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; (@pulumi/aws)Provider&lt;/div&gt;&lt;div&gt;&amp;nbsp; ):&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;(@pulumi/aws/Policy)Policy&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="xMMDIXil7vFxodbTR-LS-35" vertex="1">
           <mxGeometry y="280" width="240" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="xMMDIXil7vFxodbTR-LS-44" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="xMMDIXil7vFxodbTR-LS-37" edge="1" target="78961159f06e98e8-32">
+        <mxCell id="1eUS9TlKWDJO0VEXVH_M-1" value="- readPolicyJson(&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; ポリシー名: String,&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; 変数リスト: {[key: String]: String}&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp; ): any&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="xMMDIXil7vFxodbTR-LS-35">
+          <mxGeometry y="330" width="240" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="xMMDIXil7vFxodbTR-LS-44" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="xMMDIXil7vFxodbTR-LS-37" target="78961159f06e98e8-32" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="350.96000000000004" y="217" as="sourcePoint" />
             <mxPoint x="450" y="217" as="targetPoint" />
@@ -140,7 +143,7 @@
             <mxPoint x="47" y="10" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="DzEdQuTOkfnMJAc7aqNY-5" value="Lambda実行ロール" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="xMMDIXil7vFxodbTR-LS-44">
+        <mxCell id="DzEdQuTOkfnMJAc7aqNY-5" value="Lambda実行ロール" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="xMMDIXil7vFxodbTR-LS-44" vertex="1" connectable="0">
           <mxGeometry x="-0.08" y="-1" relative="1" as="geometry">
             <mxPoint x="4" y="-12" as="offset" />
           </mxGeometry>
