@@ -3,7 +3,6 @@ import * as pulumi from "@pulumi/pulumi";
 import * as fs from "fs";
 import * as sinon from "sinon";
 import proxyquire from "proxyquire";
-import assert from "assert";
 import "mocha";
 import { IAMRole } from "../iam/iam";
 import { expect } from "chai";
@@ -143,32 +142,32 @@ describe(
                     "### readPolicyJsonメソッドで複数の変数に値が埋め込まれていることを確認します。",
                     () => {
                         // Given
-                        // 字下げも実ファイル同等に再現したいのでインデントはソースコードに揃えずに記載する
-                        const policyContent: string = 
-`{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "cloudWatchLogs",
-            "Effect": "Allow",
-            "Action": [
-                "logs:CreateLogStream",
-                "logs:CreateLogGroup",
-                "logs:PutLogEvents"
-            ],
-            "Resource": [
-                "arn:aws:logs:ap-northeast-1:\${aws_account_id}:log-group:/aws/lambda/\${lambda_func_name}:*",
-                "arn:aws:logs:ap-northeast-1:\${aws_account_id}:log-group:/aws/lambda/\${lambda_func_name}:log-stream:*"
-            ]
-        },
-        {
-            "Sid": "bedrock",
-            "Effect": "Allow",
-            "Action": "bedrock:InvokeModelWithResponseStream",
-            "Resource": "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-opus-20240229-v1:0"
-        }
-    ]
-}`
+                        const policyContent = 
+                            {
+                                "Version": "2012-10-17",
+                                "Statement": [
+                                    {
+                                        "Sid": "cloudWatchLogs",
+                                        "Effect": "Allow",
+                                        "Action": [
+                                            "logs:CreateLogStream",
+                                            "logs:CreateLogGroup",
+                                            "logs:PutLogEvents"
+                                        ],
+                                        "Resource": [
+                                            "arn:aws:logs:ap-northeast-1:\${aws_account_id}:log-group:/aws/lambda/\${lambda_func_name}:*",
+                                            "arn:aws:logs:ap-northeast-1:\${aws_account_id}:log-group:/aws/lambda/\${lambda_func_name}:log-stream:*"
+                                        ]
+                                    },
+                                    {
+                                        "Sid": "bedrock",
+                                        "Effect": "Allow",
+                                        "Action": "bedrock:InvokeModelWithResponseStream",
+                                        "Resource": "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-opus-20240229-v1:0"
+                                    }
+                                ]
+                            }
+
                         const expectedJson = 
                             {
                                 "Version": "2012-10-17",
@@ -194,7 +193,7 @@ describe(
                                     }
                                 ]
                             };
-                        const readFileSyncStub = sinon.stub().returns(policyContent);
+                        const readFileSyncStub = sinon.stub().returns(JSON.stringify(policyContent));
 
                         const IAMRole = proxyquire('../iam/iam.ts', {
                             'fs': { readFileSync: readFileSyncStub }
@@ -219,8 +218,8 @@ describe(
                 )
 
                 it(
-                    "### createPolicyメソッドでリソースに[App]タグが付けられているか確認します。",
-                    function(done) {
+                    "### createPolicyメソッドでリソースに[App]タグが付けられていることとroleポリシーの正常性を確認します。",
+                    (done) => {
                         // Given
                         const expectedJson = 
                             {
@@ -248,24 +247,28 @@ describe(
                                 ]
                             };
 
-                        const readPolicyJsonStub = sinon.stub().returns(JSON.parse(expectedJson.toString()));
-                        const IAMRole = proxyquire('../iam/iam.ts', {
-                            'fs': { readFileSync: readPolicyJsonStub }
-                        }).IAMRole;
+                        const expectedTags :aws.Tags = {App: "PicToTxt"};
 
-                        const iamRole = new IAMRole("testRole", "testPolicy", "../iam/policy/test.json", {App: "PicToTxt"});
+                        const iamRole = new IAMRole("testRole", "testPolicy", "../iam/policy/test.json", "../iam/policy/test.json", expectedTags);
+
+                        // readPolicyJsonはprivateメソッドのためiamRoleの型チェックを回避する。
+                        const readPolicyJsonStub = sinon.stub(iamRole as any, "readPolicyJson");
+
+                        readPolicyJsonStub.returns(expectedJson);
 
                         // When
-                        let iamRolePolicyResource = iamRole["createIAMRole"](provider);
+                        let iamPolicyResource = iamRole["createPolicy"](provider);
 
                         // Then
                         pulumi
-                            .all([iamRolePolicyResource?.urn, iamRolePolicyResource?.tags])
+                            .all([iamPolicyResource?.urn, iamPolicyResource?.tags, iamPolicyResource?.policy])
                             .apply(
-                                ([urn, tags]) => {
+                                ([urn, tags, policy]) => {
                                     if (!tags || !tags["App"]){
-                                        done(new Error(`Missing a App tag on IAM Role ${urn}`));
-                                    }else {
+                                        done(new Error(`Missing a App tag on IAM Role ${urn} , ${tags}`));
+                                    } else if (policy !== JSON.stringify(expectedJson)) {
+                                        done(new Error(`Policy is not equal to expected value. ${urn} , ${policy}`));
+                                    } else {
                                         done();
                                     }
                                 }
@@ -274,31 +277,105 @@ describe(
                 )
 
                 it(
-                    "### createIAMRoleメソッドでリソースに[App]タグが付けられているか確認します。",
-                    function(done) {
+                    "### createRoleメソッドでリソースに[App]タグが付けられていることとassume roleポリシーの正常性を確認します。",
+                    (done) => {
                         // Given
-                        const createPolicyStub = sinon.stub().returns("");
-                        const IAMRole = proxyquire('../iam/iam.ts', {
-                            'fs': { readFileSync: createPolicyStub }
-                        }).IAMRole;
+                        const expectedJson = 
+                            {
+                                "Version": "2012-10-17",
+                                "Statement": [
+                                    {
+                                        "Effect": "Allow",
+                                        "Principal": {
+                                            "Service": "lambda.amazonaws.com"
+                                        },
+                                        "Action": "sts:AssumeRole"
+                                    }
+                                ]
+                            };
 
-                        const iamRole = new IAMRole("testRole", "testPolicy", "../iam/policy/test.json", {App: "PicToTxt"});
+                        const expectedTags :aws.Tags = {App: "PicToTxt"};
+
+                        const iamRole = new IAMRole("testRole", "testPolicy", "../iam/policy/test.json", "../iam/policy/test.json", expectedTags);
+
+                        // readPolicyJsonはprivateメソッドのためiamRoleの型チェックを回避する。
+                        const readPolicyJsonStub = sinon.stub(iamRole as any, "readPolicyJson");
+
+                        readPolicyJsonStub.returns(expectedJson);
 
                         // When
-                        let iamRoleResource = iamRole.createIAMRole(provider);
+                        let iamRoleEmptyResource = iamRole["createRole"](provider);
 
                         // Then
                         pulumi
-                            .all([iamRoleResource?.urn, iamRoleResource?.tags])
+                            .all([iamRoleEmptyResource?.urn, iamRoleEmptyResource?.tags, iamRoleEmptyResource?.assumeRolePolicy])
                             .apply(
-                                ([urn, tags]) => {
+                                ([urn, tags, assumeRolePolicy]) => {
                                     if (!tags || !tags["App"]){
-                                        done(new Error(`Missing a App tag on IAM Role ${urn}`));
-                                    }else {
+                                        done(new Error(`Missing a App tag on IAM Role ${urn} , ${tags}`));
+                                    } else if (assumeRolePolicy !== JSON.stringify(expectedJson)) {
+                                        done(new Error(`Policy is not equal to expected value. ${urn} , ${assumeRolePolicy}`));
+                                    } else {
                                         done();
                                     }
                                 }
                             )
+                    }
+                )
+
+                it(
+                    "### createIAMRoleメソッドでロールにポリシーがアタッチされることを確認します。",
+                    () => {
+                        // Given
+                        const iamRole = new IAMRole("testRole", "testPolicy", "../iam/policy/testPolicy.json", "../iam/policy/testPolicyAssume.json", {App: "PicToTxt"});
+
+                        const policyAssumeJson = 
+                            {
+                                "Version": "2012-10-17",
+                                "Statement": [
+                                    {
+                                        "Effect": "Allow",
+                                        "Principal": {
+                                            "Service": "lambda.amazonaws.com"
+                                        },
+                                        "Action": "sts:AssumeRole"
+                                    }
+                                ]
+                            };
+
+                        const policyJson = 
+                            {
+                                "Version": "2012-10-17",
+                                "Statement": [
+                                    {
+                                        "Sid": "cloudWatchLogs",
+                                        "Effect": "Allow",
+                                        "Action": [
+                                            "logs:CreateLogStream",
+                                            "logs:CreateLogGroup",
+                                            "logs:PutLogEvents"
+                                        ],
+                                        "Resource": [
+                                            "arn:aws:logs:ap-northeast-1:123456789012:log-group:/aws/lambda/lambda_test_func:*",
+                                            "arn:aws:logs:ap-northeast-1:123456789012:log-group:/aws/lambda/lambda_test_func:log-stream:*"
+                                        ]
+                                    },
+                                    {
+                                        "Sid": "bedrock",
+                                        "Effect": "Allow",
+                                        "Action": "bedrock:InvokeModelWithResponseStream",
+                                        "Resource": "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-opus-20240229-v1:0"
+                                    }
+                                ]
+                            };
+
+                        const readPolicyJsonStub = sinon.stub(iamRole as any, "readPolicyJson");
+                        readPolicyJsonStub.withArgs("../iam/policy/testPolicy.json").returns(policyJson);
+                        readPolicyJsonStub.withArgs("../iam/policy/testPolicyAssume.json").returns(policyAssumeJson);
+
+                        // When
+                        // Then
+                        expect(() => iamRole.createIAMRole(provider)).to.not.throw();
                     }
                 )
             }
@@ -318,13 +395,6 @@ describe(
 
                         // When
                         // Then
-                        // assert.doesNotThrow(() =>
-                        //     jsonFiles.forEach((s) => {
-                        //         let jsonString: string = fs.readFileSync(s, "utf-8");
-                        //         JSON.parse(jsonString || "null");
-                        //     })
-                        // )
-
                         expect(
                             () => {
                                 jsonFiles.forEach((s) => {
