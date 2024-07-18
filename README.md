@@ -24,12 +24,19 @@ Amazon Bedrockを使用した画像に表示されている文字列を抽出す
 ※ ローカルでデプロイまで行う場合は`--env AWS_ACCESS_KEY_ID={設定値} --env AWS_SECRET_ACCESS_KEY={設定値} --env PULUMI_ACCESS_TOKEN={設定値}` を追加
 1. 起動したコンテナにログイン
 `docker exec -it pulumiNodeServerPicToTextInfra /bin/bash`
-1. 以下コマンドを実行する
+1. 以下コマンドを実行してpulumiの初期化を行う
 `pulumi install`
 ※ Finishedの表示後コンソールが固まるのでCtrl-Cで実行を終了する
+1. 以下コマンドを実行してテストフレームワークをインストールする
+`npm install mocha @types/mocha ts-node --global --save-dev`
 
 ### python
 docker image python:3.12をdockerhubよりプル
 `docker pull python:3.12`
 プルしたイメージをもとにコンテナ作成
 ```docker run --name pythonServerPicToTextInfra -d -it --mount type=bind,source={OS絶対ディレクトリ},target=/home/InfraPicToTxt python:3.12 /bin/bash```
+
+## テストコード実行
+1. 起動したコンテナにログイン
+1. テストコード配置ディレクトリに移動して以下コマンドを実行
+`mocha -r ts-node/register <テストファイル>`
