@@ -2,13 +2,13 @@
     # THIS IS TEST!!!
     "name": "infraPicToTxt",
     "main": "index.ts",
-    "devDependencies": {
-        "@types/mocha": "^10.0.7",
-        "@types/node": "^18",
-        "@types/sinon": "^17.0.3",
+"devDependencies": {
+      "@types/mocha": "^10.0.7",
+                "@types/node": "^18",
+            "@types/sinon": "^17.0.3",
         "mocha": "^10.6.0",
         "sinon": "^18.0.0",
-        "typescript": "^5.0.0"
+        "typescript": "^5.0.0",
     },
     "dependencies": {
         "@pulumi/aws": "^6.0.0",
