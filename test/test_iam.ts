@@ -309,7 +309,7 @@ describe(
             function() {
                 it(
                     "### JSONファイルに構文エラーがないか確認します。",
-                    function(done) {
+                    () => {
                         // Given
                         let jsonFiles: string[] = fs.readdirSync("/pulumi/projects/InfraPicToTxt/iam/policies/");
                         for(let i = 0; i < jsonFiles.length; i++){
@@ -318,13 +318,21 @@ describe(
 
                         // When
                         // Then
-                        assert.doesNotThrow(() =>
-                            jsonFiles.forEach((s) => {
-                                let jsonString: string = fs.readFileSync(s, "utf-8");
-                                JSON.parse(jsonString || "null");
+                        // assert.doesNotThrow(() =>
+                        //     jsonFiles.forEach((s) => {
+                        //         let jsonString: string = fs.readFileSync(s, "utf-8");
+                        //         JSON.parse(jsonString || "null");
+                        //     })
+                        // )
+
+                        expect(
+                            () => {
+                                jsonFiles.forEach((s) => {
+                                    let jsonString: string = fs.readFileSync(s, "utf-8");
+                                    JSON.parse(jsonString || "null");
+                                })
                             })
-                        )
-                        done();
+                            .to.not.throw();
                     }
                 )
             }
