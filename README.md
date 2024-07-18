@@ -12,7 +12,7 @@ Amazon Bedrockを使用した画像に表示されている文字列を抽出す
 * Python バージョン3.12
 
 ## クラス構成
-<image width=50% src="./.docs/PicToTextInfraClass.drawio.svg">
+<image width=80% src="./.docs/PicToTextInfraClass.drawio.svg">
 
 ## ローカル環境構築
 
