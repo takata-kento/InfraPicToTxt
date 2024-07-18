@@ -20,6 +20,11 @@ export class IAMRole {
     private policyFileName: string;
 
     /**
+     * assumeロールポリシー定義ファイル名
+     */
+    private policyAssumeFileName: string;
+
+    /**
      * リソースタグ
      */
     private tags: aws.Tags;
@@ -33,10 +38,11 @@ export class IAMRole {
      * @param _policyFileName IAMポリシー定義ファイル名(相対パス指定)
      * @param _tags リソースタグ
      */
-    constructor(_roleName: string, _policyName: string, _policyFileName: string, _tags: aws.Tags){
+    constructor(_roleName: string, _policyName: string, _policyFileName: string, _policyAssumeFileName: string, _tags: aws.Tags){
         this.roleName = _roleName;
         this.policyName = _policyName;
         this.policyFileName = _policyFileName;
+        this.policyAssumeFileName = _policyAssumeFileName;
         this.tags = _tags;
     }
 
@@ -45,12 +51,32 @@ export class IAMRole {
      * @param _provider 
      * @returns IAMロールリソース
      */
-    public createIAMRole(_provider: aws.Provider): aws.iam.Role {
-        /**
-         * ToDo
-         * WRITE IMPLEMENTATION
-         */
-        return new aws.iam.Role("",{assumeRolePolicy: ""},{});
+    public createIAMRole(_provider: aws.Provider): aws.iam.PolicyAttachment {
+        return new aws.iam.PolicyAttachment(
+            `Role_Attachment_${this.roleName}`,
+            {
+                name: `Role_Attachment_${this.roleName}`,
+                roles: [this.createRole(_provider).name],
+                policyArn: this.createPolicy(_provider).arn
+            },
+            {provider: _provider});
+    }
+
+    /**
+     * 空のIAMロールを作成します。
+     * @param _provider 
+     * @returns IAMロールリソース
+     */
+    private createRole(_provider: aws.Provider): aws.iam.Role {
+        return new aws.iam.Role(
+            `Role_${this.roleName}`,
+            {
+                name: this.roleName,
+                assumeRolePolicy: JSON.stringify(this.readPolicyJson(this.policyAssumeFileName, new Map())),
+                tags: this.tags
+            },
+            {provider: _provider}
+        );
     }
 
     /**
@@ -65,7 +91,26 @@ export class IAMRole {
          */
         let iamPolicy: aws.iam.Policy;
 
-        iamPolicy = new aws.iam.Policy("",{policy: ""},{});
+        iamPolicy = new aws.iam.Policy(
+            `Policy_${this.policyName}`,
+            {
+                name: this.policyName,
+                policy: JSON.stringify(
+                    this.readPolicyJson(
+                        this.policyFileName,
+                        new Map(
+                            [
+                                ["aws_account_id", process.env["aws_account_id"] as string]
+                            ]
+                        )
+                    )
+                ),
+                tags: this.tags
+            },
+            {
+                provider: _provider
+            }
+        );
         return iamPolicy;
     }
 
