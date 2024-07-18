@@ -1,32 +1,11 @@
-import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 import * as fs from "fs";
-import { json } from "stream/consumers";
 
 export class IAMRole {
-    /**
-     * IAMロール名
-     */
     private roleName: string;
-
-    /**
-     * IAMポリシー名
-     */
     private policyName: string;
-
-    /**
-     * ポリシー定義ファイル名
-     */
     private policyFileName: string;
-
-    /**
-     * assumeロールポリシー定義ファイル名
-     */
     private policyAssumeFileName: string;
-
-    /**
-     * リソースタグ
-     */
     private tags: aws.Tags;
 
     /**
@@ -85,10 +64,6 @@ export class IAMRole {
      * @returns IAMポリシーリソース
      */
     private createPolicy(_provider: aws.Provider): aws.iam.Policy {
-        /**
-         * ToDo
-         * WRITE IMPLEMENTATION
-         */
         let iamPolicy: aws.iam.Policy;
 
         iamPolicy = new aws.iam.Policy(
