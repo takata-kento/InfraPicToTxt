@@ -71,12 +71,12 @@ export class IAMRole {
 
     /**
      * IAMポリシーファイルを読み込みます。
-     * @param _policyName ポリシー名
+     * @param _policyFileName ポリシーJsonファイル名
      * @param _variables 変数一覧マップ<変数key: string, 値: string>
      * @returns JSONデータ
      */
-    private readPolicyJson(_policyName: string, _variables: Map<string,string>): JSON {
-        let jsonFile = fs.readFileSync(`/pulumi/projects/InfraPicToTxt/iam/policies/${_policyName}.json`, "utf-8");
+    private readPolicyJson(_policyFileName: string, _variables: Map<string,string>): JSON {
+        let jsonFile = fs.readFileSync(_policyFileName, "utf-8");
 
         _variables.forEach((value, key) => {
             let s: string = jsonFile;
