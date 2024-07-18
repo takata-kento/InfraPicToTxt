@@ -28,7 +28,6 @@ Amazon Bedrockを使用した画像に表示されている文字列を抽出す
 `pulumi install`
 ※ Finishedの表示後コンソールが固まるのでCtrl-Cで実行を終了する
 1. 以下コマンドを実行してテストフレームワークをインストールする
-`npm install --global mocha`
 `npm install mocha @types/mocha ts-node --global --save-dev`
 
 ### python
