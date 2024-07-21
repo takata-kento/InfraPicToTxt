@@ -37,4 +37,4 @@ docker image python:3.12をdockerhubよりプル
 ## テストコード実行
 1. 起動したコンテナにログイン
 1. テストコード配置ディレクトリに移動して以下コマンドを実行
-`../node_modules/mocha/bin/mocha.js -r ts-node/register test_resources.ts -r ts-node/register <テストファイル>`
+`../node_modules/mocha/bin/mocha.js -r ts-node/register <テストファイル>`
