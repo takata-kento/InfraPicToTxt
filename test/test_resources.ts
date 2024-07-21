@@ -1,11 +1,14 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
+import * as apigateway from "@pulumi/aws-apigateway";
 import * as fs from "fs";
 import * as sinon from "sinon";
 import proxyquire from "proxyquire";
 import "mocha";
 import { IAMRole } from "../iam/iam";
+import { APIGateway, route } from "../apigateway/apigateway";
 import { expect } from "chai";
+import { describe } from "mocha";
 
 // pulumiランタイムのモックを作成
 pulumi.runtime.setMocks(
@@ -403,6 +406,75 @@ describe(
                                 })
                             })
                             .to.not.throw();
+                    }
+                )
+            }
+        )
+    }
+)
+
+describe(
+    "# API Gatewayテスト",
+    function() {
+        let provider: aws.Provider;
+
+        describe(
+            "## APIGatewayクラスユニットテスト",
+            function() {
+                before(
+                    () => {
+                        provider = new aws.Provider(
+                            "privileged",
+                            {
+                                assumeRole: {
+                                    roleArn: "arn:aws:iam::123456789012:role/RoleCicdInfraLlmPoc",
+                                    sessionName: "PulumiSession",
+                                    externalId: "PulumiApplication",
+                                },
+                            }
+                        );
+                    }
+                )
+
+                afterEach(
+                    () => {
+                        sinon.restore();
+                    }
+                )
+            
+                it(
+                    "### createAPIGatewayメソッドでAPI Gatewayリソースが正常に作成されることを確認します。",
+                    (done) => {
+                        // Given
+                        const expectedTags :aws.Tags = {App: "PicToTxt"};
+                        const routes: route[] = [
+                            {
+                                method: apigateway.Method.GET,
+                                apiPath: "/",
+                                lambda_hundler: new aws.lambda.Function("testLambda", {role: ""}, {provider: provider}),
+                                lambda_auth_hundler: new aws.lambda.Function("testAuthLambda", {role: ""}, {provider: provider})
+                            }
+                        ]
+                        const expectedStage = "testStage";
+                        const apiGateway = new APIGateway("testAPIGateway", routes, expectedStage, expectedTags);
+
+                        // When
+                        let apiGatewayResource = apiGateway.createAPIGateway(provider);
+
+                        // Then
+                        pulumi
+                            .all([apiGatewayResource?.urn, apiGatewayResource?.api.tags, apiGatewayResource?.stage.tags])
+                            .apply(
+                                ([urn, apiTags, stageTags]) => {
+                                    if (!apiTags || !apiTags["App"]){
+                                        done(new Error(`Missing a App tag on IAM Role ${urn}`));
+                                    }else if (!stageTags || !stageTags["App"]){
+                                        done(new Error(`Missing a App tag on IAM Role ${urn}`));
+                                    } else {
+                                        done();
+                                    }
+                                }
+                            )
                     }
                 )
             }
