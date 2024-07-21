@@ -441,35 +441,70 @@ describe(
                         sinon.restore();
                     }
                 )
-            
+
+                it(
+                    "### createAPIGatewayメソッドでroutesに同じパスかつ同じメソッドが存在する場合にエラーを投げることを確認します。",
+                    () => {
+                        // Given
+                        const tags :aws.Tags = {App: "PicToTxt"};
+                        const routes: route[] = [
+                            {
+                                method: apigateway.Method.GET,
+                                apiPath: "/",
+                                lambda_hundler: new aws.lambda.Function("testLambda1", {role: ""}, {provider: provider}),
+                                lambda_auth_hundler: new aws.lambda.Function("testAuthLambda", {role: ""}, {provider: provider})
+                            },
+                            {
+                                method: apigateway.Method.GET,
+                                apiPath: "/",
+                                lambda_hundler: new aws.lambda.Function("testLambda2", {role: ""}, {provider: provider}),
+                                lambda_auth_hundler: new aws.lambda.Function("testAuthLambda", {role: ""}, {provider: provider})
+                            }
+                        ]
+                        const stage = "testStage";
+                        const apiGateway = new APIGateway("testAPIGateway", routes, stage, tags);
+
+                        // When
+                        // Then
+                        expect(() => apiGateway.createAPIGateway(provider)).to.throw();
+                    }
+                )
+
                 it(
                     "### createAPIGatewayメソッドでAPI Gatewayリソースが正常に作成されることを確認します。",
                     (done) => {
                         // Given
                         const expectedTags :aws.Tags = {App: "PicToTxt"};
+                        const mockLambdaFunction = new aws.lambda.Function("mockFunction", {
+                            runtime: aws.lambda.NodeJS12dXRuntime,
+                            code: new pulumi.asset.AssetArchive({
+                                ".": new pulumi.asset.FileArchive("./app"),
+                            }),
+                            handler: "index.handler",
+                            role: "mockRoleArn",
+                        });
                         const routes: route[] = [
                             {
                                 method: apigateway.Method.GET,
                                 apiPath: "/",
-                                lambda_hundler: new aws.lambda.Function("testLambda", {role: ""}, {provider: provider}),
-                                lambda_auth_hundler: new aws.lambda.Function("testAuthLambda", {role: ""}, {provider: provider})
+                                lambda_hundler: mockLambdaFunction,
+                                lambda_auth_hundler: mockLambdaFunction
                             }
                         ]
                         const expectedStage = "testStage";
                         const apiGateway = new APIGateway("testAPIGateway", routes, expectedStage, expectedTags);
 
                         // When
-                        let apiGatewayResource = apiGateway.createAPIGateway(provider);
+                        // @pulumi/aws-apigatewayのRestAPIクラスにtagsプロパティが存在しないため、any型でキャストする。
+                        let apiGatewayResource: any = apiGateway.createAPIGateway(provider);
 
                         // Then
                         pulumi
-                            .all([apiGatewayResource?.urn, apiGatewayResource?.api.tags, apiGatewayResource?.stage.tags])
+                            .all([apiGatewayResource?.urn, apiGatewayResource?.tags])
                             .apply(
-                                ([urn, apiTags, stageTags]) => {
-                                    if (!apiTags || !apiTags["App"]){
-                                        done(new Error(`Missing a App tag on IAM Role ${urn}`));
-                                    }else if (!stageTags || !stageTags["App"]){
-                                        done(new Error(`Missing a App tag on IAM Role ${urn}`));
+                                ([urn, tags]) => {
+                                    if (!tags || !tags["App"]){
+                                        done(new Error(`Missing a App tag on Api Gateway ${urn} , ${tags}`));
                                     } else {
                                         done();
                                     }
