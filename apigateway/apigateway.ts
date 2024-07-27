@@ -38,10 +38,12 @@ export class APIGateway {
         let apiGatewayResource: apigateway.RestAPI;
         let routeArgs: apigateway.types.input.RouteArgs[] = [];
 
-        this.routes.forEach(expectedRoute => {
-            if(this.routes.filter(route => route.apiPath === expectedRoute.apiPath).length > 1){
-                throw new Error(`route path is duplicated: ${expectedRoute.apiPath}`);
+        let paths = new Set<string>();
+        this.routes.forEach(route => {
+            if(paths.has(route.apiPath)){
+                throw new Error(`route path is duplicated: ${route.apiPath}`);
             }
+            paths.add(route.apiPath);
         });
 
         this.routes.forEach(
