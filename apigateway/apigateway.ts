@@ -4,8 +4,8 @@ import * as apigateway from "@pulumi/aws-apigateway";
 export interface route {
     method: apigateway.Method;
     apiPath: string;
-    lambda_hundler: aws.lambda.Function;
-    lambda_auth_hundler: aws.lambda.Function;
+    lambda_handler: aws.lambda.Function;
+    lambda_auth_handler: aws.lambda.Function;
 }
 
 export class APIGateway {
@@ -50,11 +50,11 @@ export class APIGateway {
             route => {
                 routeArgs.push({
                     path: route.apiPath,
-                    eventHandler: route.lambda_hundler,
+                    eventHandler: route.lambda_handler,
                     method: route.method,
                     authorizers: [{
                         parameterName: "Bearer",
-                        handler: route.lambda_auth_hundler
+                        handler: route.lambda_auth_handler
                     }]
                 });
             }
