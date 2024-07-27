@@ -40,7 +40,7 @@ export class APIGateway {
 
         this.routes.forEach(expectedRoute => {
             if(this.routes.filter(route => route.apiPath === expectedRoute.apiPath).length > 1){
-                throw new Error('route path is duplicated: ${expectedRoute.apiPath}');
+                throw new Error(`route path is duplicated: ${expectedRoute.apiPath}`);
             }
         });
 
