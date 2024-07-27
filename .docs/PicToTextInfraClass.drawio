@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-07-18T15:35:20.077Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36" etag="MTm2tm-Oso8i2WHMI6Ei" version="24.7.1" type="device">
+<mxfile host="app.diagrams.net" modified="2024-07-19T15:39:53.412Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36" etag="zerEzCdwJtStPkUdRSNp" version="24.7.1" type="device">
   <diagram name="Page-1" id="9f46799a-70d6-7492-0946-bef42562c5a5">
     <mxGraphModel dx="1674" dy="841" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
       <root>
@@ -109,7 +109,7 @@
         <mxCell id="xMMDIXil7vFxodbTR-LS-38" value="- ポリシーファイル名: s&lt;span style=&quot;background-color: initial;&quot;&gt;tring&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="xMMDIXil7vFxodbTR-LS-35" vertex="1">
           <mxGeometry y="78" width="240" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="hTaqogGyKCBE5-Hot58E-1" value="- assumeロールポリシーファイル名: s&lt;span style=&quot;background-color: initial;&quot;&gt;tring&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="xMMDIXil7vFxodbTR-LS-35">
+        <mxCell id="hTaqogGyKCBE5-Hot58E-1" value="- assumeロールポリシーファイル名: s&lt;span style=&quot;background-color: initial;&quot;&gt;tring&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="xMMDIXil7vFxodbTR-LS-35" vertex="1">
           <mxGeometry y="104" width="240" height="26" as="geometry" />
         </mxCell>
         <mxCell id="xMMDIXil7vFxodbTR-LS-39" value="- タグ: (@pulumi/aws)Tags" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="xMMDIXil7vFxodbTR-LS-35" vertex="1">
@@ -124,7 +124,7 @@
         <mxCell id="xMMDIXil7vFxodbTR-LS-41" value="+ createIAMRole(&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; (@pulumi/aws)Provider&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp;): (@pulumi/aws/iam)PolicyAttachment&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="xMMDIXil7vFxodbTR-LS-35" vertex="1">
           <mxGeometry y="254" width="240" height="52" as="geometry" />
         </mxCell>
-        <mxCell id="hTaqogGyKCBE5-Hot58E-2" value="- createRole(&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; (@pulumi/aws)Provider&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp;): (@pulumi/aws/iam)Role&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="xMMDIXil7vFxodbTR-LS-35">
+        <mxCell id="hTaqogGyKCBE5-Hot58E-2" value="- createRole(&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; (@pulumi/aws)Provider&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp;): (@pulumi/aws/iam)Role&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="xMMDIXil7vFxodbTR-LS-35" vertex="1">
           <mxGeometry y="306" width="240" height="52" as="geometry" />
         </mxCell>
         <mxCell id="xMMDIXil7vFxodbTR-LS-52" value="- createPolicy(&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; (@pulumi/aws)Provider&lt;/div&gt;&lt;div&gt;&amp;nbsp; ):&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;(@pulumi/aws/Policy)Policy&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;whiteSpace=wrap;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="xMMDIXil7vFxodbTR-LS-35" vertex="1">
