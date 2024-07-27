@@ -14,8 +14,6 @@ export class APIGateway {
     stageName: string;
     tags: aws.Tags;
 
-    stageResource: any;
-
     /**
      * API Gatewayを作成するための各種パラメータを設定します。
      * リソースタグは本クラスで作成されるすべてのリソースに付けられます。
