@@ -6,7 +6,7 @@ import * as sinon from "sinon";
 import proxyquire from "proxyquire";
 import "mocha";
 import { IAMRole } from "../iam/iam";
-import { APIGateway, route } from "../apigateway/apigateway";
+import { APIGateway, Route } from "../apigateway/apigateway";
 import { expect } from "chai";
 import { describe } from "mocha";
 
@@ -447,18 +447,18 @@ describe(
                     () => {
                         // Given
                         const tags :aws.Tags = {App: "PicToTxt"};
-                        const routes: route[] = [
+                        const routes: Route[] = [
                             {
                                 method: apigateway.Method.GET,
                                 apiPath: "/",
-                                lambda_hundler: new aws.lambda.Function("testLambda1", {role: ""}, {provider: provider}),
-                                lambda_auth_hundler: new aws.lambda.Function("testAuthLambda", {role: ""}, {provider: provider})
+                                lambda_handler: new aws.lambda.Function("testLambda1", {role: ""}, {provider: provider}),
+                                lambda_auth_handler: new aws.lambda.Function("testAuthLambda", {role: ""}, {provider: provider})
                             },
                             {
                                 method: apigateway.Method.GET,
                                 apiPath: "/",
-                                lambda_hundler: new aws.lambda.Function("testLambda2", {role: ""}, {provider: provider}),
-                                lambda_auth_hundler: new aws.lambda.Function("testAuthLambda", {role: ""}, {provider: provider})
+                                lambda_handler: new aws.lambda.Function("testLambda2", {role: ""}, {provider: provider}),
+                                lambda_auth_handler: new aws.lambda.Function("testAuthLambda", {role: ""}, {provider: provider})
                             }
                         ]
                         const stage = "testStage";
@@ -483,12 +483,12 @@ describe(
                             handler: "index.handler",
                             role: "mockRoleArn",
                         });
-                        const routes: route[] = [
+                        const routes: Route[] = [
                             {
                                 method: apigateway.Method.GET,
                                 apiPath: "/",
-                                lambda_hundler: mockLambdaFunction,
-                                lambda_auth_hundler: mockLambdaFunction
+                                lambda_handler: mockLambdaFunction,
+                                lambda_auth_handler: mockLambdaFunction
                             }
                         ]
                         const expectedStage = "testStage";
