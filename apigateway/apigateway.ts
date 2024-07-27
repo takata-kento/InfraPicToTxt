@@ -1,7 +1,7 @@
 import * as aws from "@pulumi/aws";
 import * as apigateway from "@pulumi/aws-apigateway";
 
-export interface route {
+export interface Route {
     method: apigateway.Method;
     apiPath: string;
     lambda_handler: aws.lambda.Function;
@@ -10,7 +10,7 @@ export interface route {
 
 export class APIGateway {
     apiName: string;
-    routes: route[];
+    routes: Route[];
     stageName: string;
     tags: aws.Tags;
 
@@ -24,7 +24,7 @@ export class APIGateway {
      * @param _stageName 
      * @param _tags 
      */
-    constructor(_apiName: string, _routes: route[], _stageName: string, _tags: aws.Tags){
+    constructor(_apiName: string, _routes: Route[], _stageName: string, _tags: aws.Tags){
         this.apiName = _apiName;
         this.routes = _routes;
         this.stageName = _stageName;
