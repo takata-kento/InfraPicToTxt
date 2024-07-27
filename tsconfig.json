@@ -15,6 +15,7 @@
     },
     "files": [
         "index.ts",
-        "iam/iam.ts"
+        "iam/iam.ts",
+        "apigateway/apigateway.ts",
     ]
 }
