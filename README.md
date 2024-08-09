@@ -35,6 +35,8 @@ docker image python:3.12をdockerhubよりプル
 ```docker run --name pythonServerPicToTextInfra -d -it --mount type=bind,source={OS絶対ディレクトリ},target=/home/InfraPicToTxt python:3.12 /bin/bash```
 
 ## テストコード実行
+
+### pulumi
 1. 起動したコンテナにログイン
 1. テストコード配置ディレクトリに移動して以下コマンドを実行
 `../node_modules/mocha/bin/mocha.js -r ts-node/register <テストファイル>`

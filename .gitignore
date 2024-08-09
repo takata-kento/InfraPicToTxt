@@ -1,2 +1,5 @@
 /bin/
 /node_modules/
+/lambda/srcLambdaFunc/bin
+/lambda/srcLambdaFunc/include
+/lambda/srcLambdaFunc/lib
