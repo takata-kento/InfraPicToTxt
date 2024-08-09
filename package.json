@@ -20,6 +20,7 @@
         "@pulumi/aws-apigateway": "^2.5.2",
         "@pulumi/awsx": "^2.0.2",
         "@pulumi/pulumi": "^3.113.0",
-        "@types/unzipper": "^0.10.9"
+        "@types/unzipper": "^0.10.10",
+        "unzipper": "^0.12.3"
     }
 }
