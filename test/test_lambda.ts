@@ -1,11 +1,8 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
-import * as sinon from "sinon";
 import "mocha";
 import { ResourceLambda } from "../lambda/lambda";
 import { describe } from "mocha";
-import * as unzipper from "unzipper";
-import { dirname } from "path";
 
 pulumi.runtime.setMocks(
     {
@@ -28,7 +25,6 @@ describe(
     "# Lambdaテスト",
     function() {
         let provider: aws.Provider;
-        let jsonParseSpy: sinon.SinonSpy;
 
         describe(
             "## Lambdaクラスユニットテスト",
