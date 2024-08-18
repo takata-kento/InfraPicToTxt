@@ -1,2 +1,8 @@
+# Binary directories
 /bin/
+# Node modules directory
 /node_modules/
+# Lambda function build and dependency directories
+/lambda/srcLambdaFunc/bin/
+/lambda/srcLambdaFunc/include/
+/lambda/srcLambdaFunc/lib/
