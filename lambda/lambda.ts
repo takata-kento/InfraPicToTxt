@@ -63,7 +63,7 @@ export class ResourceLambda {
         const srcZipOutputPath = this.ZIP_ARCHIVE_DIR + this._functionName + ".zip";
         const srcZipArchiveFile = this.createZipFileArchive(srcZipOutputPath, this._codeFile, pythonLibsZip_);
         const logGroupResource = this.createCloudWatchForLambda(provider_);
-        
+
         const lambdaFunctionResource = new aws.lambda.Function(this._functionName,{
             code: new assert.FileArchive(srcZipOutputPath),
             name: this._functionName,
