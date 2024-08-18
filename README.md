@@ -29,9 +29,9 @@ Amazon Bedrockを使用した画像に表示されている文字列を抽出す
 ※ Finishedの表示後コンソールが固まるのでCtrl-Cで実行を終了する
 
 ### python
-docker image python:3.12をdockerhubよりプル
+1. docker image python:3.12をdockerhubよりプル
 `docker pull python:3.12`
-プルしたイメージをもとにコンテナ作成
+1. プルしたイメージをもとにコンテナ作成
 ```docker run --name pythonServerPicToTextInfra -d -it --mount type=bind,source={OS絶対ディレクトリ},target=/home/InfraPicToTxt python:3.12 /bin/bash```
 
 ## テストコード実行
