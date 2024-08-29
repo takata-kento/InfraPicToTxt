@@ -27,10 +27,10 @@ export class IAMRole {
 
     /**
      * IAMロールを作成します。
-     * @param _provider 
+     * @param _provider?
      * @returns IAMロールリソース
      */
-    public createIAMRole(_provider: aws.Provider): aws.iam.PolicyAttachment {
+    public createIAMRole(_provider?: aws.Provider): aws.iam.PolicyAttachment {
         return new aws.iam.PolicyAttachment(
             `Role_Attachment_${this.roleName}`,
             {
@@ -43,10 +43,10 @@ export class IAMRole {
 
     /**
      * 空のIAMロールを作成します。
-     * @param _provider 
+     * @param _provider?
      * @returns IAMロールリソース
      */
-    private createRole(_provider: aws.Provider): aws.iam.Role {
+    private createRole(_provider?: aws.Provider): aws.iam.Role {
         return new aws.iam.Role(
             `Role_${this.roleName}`,
             {
@@ -60,10 +60,10 @@ export class IAMRole {
 
     /**
      * IAMポリシーを作成します。
-     * @param _provider 
+     * @param _provider?
      * @returns IAMポリシーリソース
      */
-    private createPolicy(_provider: aws.Provider): aws.iam.Policy {
+    private createPolicy(_provider?: aws.Provider): aws.iam.Policy {
         let iamPolicy: aws.iam.Policy;
 
         iamPolicy = new aws.iam.Policy(

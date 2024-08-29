@@ -31,10 +31,10 @@ export class APIGateway {
 
     /**
      * API Gatewayを作成します。
-     * @param _provider 
+     * @param _provider?
      * @returns API Gatewayリソース
      */
-    public createAPIGateway(_provider: aws.Provider): apigateway.RestAPI {
+    public createAPIGateway(_provider?: aws.Provider): apigateway.RestAPI {
         let apiGatewayResource: apigateway.RestAPI;
         let routeArgs: apigateway.types.input.RouteArgs[] = [];
 
