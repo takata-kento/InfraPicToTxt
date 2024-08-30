@@ -379,6 +379,62 @@ describe(
                         expect(() => iamRole.createIAMRole(provider)).to.not.throw();
                     }
                 )
+
+                it(
+                    "### providerを設定していなくてもcreateIAMRoleメソッドでロールにポリシーがアタッチされることを確認します。",
+                    () => {
+                        // Given
+                        const iamRole = new IAMRole("testRole", "testPolicy", "../iam/policy/testPolicy.json", "../iam/policy/testPolicyAssume.json", {App: "PicToTxt"});
+
+                        const policyAssumeJson = 
+                            {
+                                "Version": "2012-10-17",
+                                "Statement": [
+                                    {
+                                        "Effect": "Allow",
+                                        "Principal": {
+                                            "Service": "lambda.amazonaws.com"
+                                        },
+                                        "Action": "sts:AssumeRole"
+                                    }
+                                ]
+                            };
+
+                        const policyJson = 
+                            {
+                                "Version": "2012-10-17",
+                                "Statement": [
+                                    {
+                                        "Sid": "cloudWatchLogs",
+                                        "Effect": "Allow",
+                                        "Action": [
+                                            "logs:CreateLogStream",
+                                            "logs:CreateLogGroup",
+                                            "logs:PutLogEvents"
+                                        ],
+                                        "Resource": [
+                                            "arn:aws:logs:ap-northeast-1:123456789012:log-group:/aws/lambda/lambda_test_func:*",
+                                            "arn:aws:logs:ap-northeast-1:123456789012:log-group:/aws/lambda/lambda_test_func:log-stream:*"
+                                        ]
+                                    },
+                                    {
+                                        "Sid": "bedrock",
+                                        "Effect": "Allow",
+                                        "Action": "bedrock:InvokeModelWithResponseStream",
+                                        "Resource": "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-opus-20240229-v1:0"
+                                    }
+                                ]
+                            };
+
+                        const readPolicyJsonStub = sinon.stub(iamRole as any, "readPolicyJson");
+                        readPolicyJsonStub.withArgs("../iam/policy/testPolicy.json").returns(policyJson);
+                        readPolicyJsonStub.withArgs("../iam/policy/testPolicyAssume.json").returns(policyAssumeJson);
+
+                        // When
+                        // Then
+                        expect(() => iamRole.createIAMRole()).to.not.throw();
+                    }
+                )
             }
         )
 
