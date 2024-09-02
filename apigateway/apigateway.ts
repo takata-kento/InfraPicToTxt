@@ -5,7 +5,7 @@ export interface Route {
     method: apigateway.Method;
     apiPath: string;
     lambda_handler: aws.lambda.Function;
-    lambda_auth_handler: aws.lambda.Function;
+    lambda_auth_handler?: aws.lambda.Function;
 }
 
 export class APIGateway {
