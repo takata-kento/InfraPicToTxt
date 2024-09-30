@@ -25,20 +25,20 @@ const lambda = new Lambda.ResourceLambda(
 
 export const lambdaResource = lambda.create(undefined, "./lambda/srcLambdaFunc/packages.zip");
 
-// const apigateway = new Apigateway.APIGateway(
-//     "ApiPicToTxt",
-//     [
-//         {
-//             method: "POST",
-//             apiPath: "/picToTxt",
-//             lambda_handler: lambdaResource,
-//             lambda_auth_handler: undefined
-//         }
-//     ],
-//     "dev",
-//     {
-//         "App": "PicToTxt"
-//     }
-// );
+const apigateway = new Apigateway.APIGateway(
+    "ApiPicToTxt",
+    [
+        {
+            method: "POST",
+            apiPath: "/picToTxt",
+            lambda_handler: lambdaResource,
+            lambda_auth_handler: undefined
+        }
+    ],
+    "dev",
+    {
+        "App": "PicToTxt"
+    }
+);
 
-// export const apiGatewayResource = apigateway.createAPIGateway();
+export const apiGatewayResource = apigateway.createAPIGateway();
