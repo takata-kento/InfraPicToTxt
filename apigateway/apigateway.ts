@@ -48,27 +48,46 @@ export class APIGateway {
 
         this.routes.forEach(
             route => {
-                routeArgs.push({
-                    path: route.apiPath,
-                    eventHandler: route.lambda_handler,
-                    method: route.method,
-                    authorizers: [{
-                        parameterName: "Bearer",
-                        handler: route.lambda_auth_handler
-                    }]
-                });
+                if (route.lambda_auth_handler === undefined) {
+                    routeArgs.push({
+                        path: route.apiPath,
+                        eventHandler: route.lambda_handler,
+                        method: route.method,
+                    });
+                } else {
+                    routeArgs.push({
+                        path: route.apiPath,
+                        eventHandler: route.lambda_handler,
+                        method: route.method,
+                        authorizers: [{
+                            parameterName: "Bearer",
+                            handler: route.lambda_auth_handler
+                        }]
+                    });
+                }
             }
         );
 
-        apiGatewayResource = new apigateway.RestAPI(
-            this.apiName,
-            {
-                routes: routeArgs,
-                stageName: this.stageName,
-                tags: this.tags
-            },
-            {provider: _provider}
-        );
+        if (_provider === undefined) {
+            apiGatewayResource = new apigateway.RestAPI(
+                this.apiName,
+                {
+                    routes: routeArgs,
+                    stageName: this.stageName,
+                    tags: this.tags
+                }
+            );
+        } else {
+            apiGatewayResource = new apigateway.RestAPI(
+                this.apiName,
+                {
+                    routes: routeArgs,
+                    stageName: this.stageName,
+                    tags: this.tags
+                },
+                {provider: _provider}
+            );
+        }
 
         return apiGatewayResource;
     }
