@@ -31,14 +31,24 @@ export class IAMRole {
      * @returns IAMロールリソース
      */
     public createIAMRole(_provider?: aws.Provider): aws.iam.PolicyAttachment {
-        return new aws.iam.PolicyAttachment(
-            `Role_Attachment_${this.roleName}`,
-            {
-                name: `Role_Attachment_${this.roleName}`,
-                roles: [this.createRole(_provider).name],
-                policyArn: this.createPolicy(_provider).arn
-            },
-            {provider: _provider});
+        if (_provider === undefined) {
+            return new aws.iam.PolicyAttachment(
+                `Role_Attachment_${this.roleName}`,
+                {
+                    name: `Role_Attachment_${this.roleName}`,
+                    roles: [this.createRole(_provider).name],
+                    policyArn: this.createPolicy(_provider).arn
+                });
+        } else {
+            return new aws.iam.PolicyAttachment(
+                `Role_Attachment_${this.roleName}`,
+                {
+                    name: `Role_Attachment_${this.roleName}`,
+                    roles: [this.createRole(_provider).name],
+                    policyArn: this.createPolicy(_provider).arn
+                },
+                {provider: _provider});
+        }
     }
 
     /**
