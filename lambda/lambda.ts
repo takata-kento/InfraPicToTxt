@@ -61,28 +61,56 @@ export class ResourceLambda {
      */
     public create(provider_?: aws.Provider, pythonLibsZip_?: string): Function {
         const srcZipOutputPath = this.ZIP_ARCHIVE_DIR + this._functionName + ".zip";
-        const srcZipArchiveFile = this.createZipFileArchive(srcZipOutputPath, this._codeFile, pythonLibsZip_);
+        let srcZipArchiveFile
+        if (pythonLibsZip_ === undefined) {
+            srcZipArchiveFile = this.createZipFileArchive(srcZipOutputPath, this._codeFile);
+        } else {
+            srcZipArchiveFile = this.createZipFileArchive(srcZipOutputPath, this._codeFile, pythonLibsZip_);
+        }
         const logGroupResource = this.createCloudWatchForLambda(provider_);
 
-        const lambdaFunctionResource = new aws.lambda.Function(this._functionName,{
-            code: new assert.FileArchive(srcZipOutputPath),
-            name: this._functionName,
-            role: this._iamRole,
-            sourceCodeHash: srcZipArchiveFile.then(archive => archive.outputBase64sha256),
-            handler: "lambdaFunc.lambda_handler",
-            runtime: this.RUNTIME,
-            loggingConfig: {
-                logFormat: "Text",
-            },
-            timeout: 30,
-            tags: this._tags
-        },{
-            provider: provider_,
-            dependsOn: [
-                logGroupResource
-            ]
-        })
-        return lambdaFunctionResource;
+        if (provider_ === undefined) {
+            const lambdaFunctionResource = new aws.lambda.Function(this._functionName,{
+                code: new assert.FileArchive(srcZipOutputPath),
+                name: this._functionName,
+                role: this._iamRole,
+                sourceCodeHash: srcZipArchiveFile.then(archive => archive.outputBase64sha256),
+                handler: "lambdaFunc.lambda_handler",
+                runtime: this.RUNTIME,
+                loggingConfig: {
+                    logFormat: "Text",
+                },
+                timeout: 30,
+                tags: this._tags
+            },{
+                dependsOn: [
+                    logGroupResource
+                ]
+            })
+
+            return lambdaFunctionResource;
+        } else {
+            const lambdaFunctionResource = new aws.lambda.Function(this._functionName,{
+                code: new assert.FileArchive(srcZipOutputPath),
+                name: this._functionName,
+                role: this._iamRole,
+                sourceCodeHash: srcZipArchiveFile.then(archive => archive.outputBase64sha256),
+                handler: "lambdaFunc.lambda_handler",
+                runtime: this.RUNTIME,
+                loggingConfig: {
+                    logFormat: "Text",
+                },
+                timeout: 30,
+                tags: this._tags
+            },{
+                provider: provider_,
+                dependsOn: [
+                    logGroupResource
+                ]
+            })
+
+            return lambdaFunctionResource;
+        }
     }
 
     /**
@@ -91,14 +119,19 @@ export class ResourceLambda {
      * @returns CloudWatchLogsのロググループリソースを表すインスタンス
      */
     private createCloudWatchForLambda(provider_?: aws.Provider): LogGroup{
-        this._cloudWatchLogGroup = new aws.cloudwatch.LogGroup(this._functionName,{
-            name: `/aws/lambda/${this._functionName}`,
-            retentionInDays: 14
-        },{
-            provider: provider_
-        });
-    
-        return this._cloudWatchLogGroup;
+        if (provider_ === undefined) {
+            return this._cloudWatchLogGroup = new aws.cloudwatch.LogGroup(this._functionName,{
+                name: `/aws/lambda/${this._functionName}`,
+                retentionInDays: 14
+            });
+        } else {
+            return this._cloudWatchLogGroup = new aws.cloudwatch.LogGroup(this._functionName,{
+                name: `/aws/lambda/${this._functionName}`,
+                retentionInDays: 14
+            },{
+                provider: provider_
+            });
+        }
     }
 
     /**
