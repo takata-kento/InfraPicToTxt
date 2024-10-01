@@ -68,9 +68,7 @@ export class ResourceLambda {
             srcZipArchiveFile = this.createZipFileArchive(srcZipOutputPath, this._codeFile, pythonLibsZip_);
         }
         const logGroupResource = this.createCloudWatchForLambda(provider_);
-
-        if (provider_ === undefined) {
-            const lambdaFunctionResource = new aws.lambda.Function(this._functionName,{
+        const lambdaFunctionConfig = {
                 code: new assert.FileArchive(srcZipOutputPath),
                 name: this._functionName,
                 role: this._iamRole,
@@ -82,32 +80,29 @@ export class ResourceLambda {
                 },
                 timeout: 30,
                 tags: this._tags
-            },{
-                dependsOn: [
-                    logGroupResource
-                ]
-            })
+        }
+
+        if (provider_ === undefined) {
+            const lambdaFunctionResource = new aws.lambda.Function(
+                this._functionName,
+                lambdaFunctionConfig,
+                {
+                    dependsOn: [
+                        logGroupResource
+                    ]
+                })
 
             return lambdaFunctionResource;
         } else {
-            const lambdaFunctionResource = new aws.lambda.Function(this._functionName,{
-                code: new assert.FileArchive(srcZipOutputPath),
-                name: this._functionName,
-                role: this._iamRole,
-                sourceCodeHash: srcZipArchiveFile.then(archive => archive.outputBase64sha256),
-                handler: "lambdaFunc.lambda_handler",
-                runtime: this.RUNTIME,
-                loggingConfig: {
-                    logFormat: "Text",
-                },
-                timeout: 30,
-                tags: this._tags
-            },{
-                provider: provider_,
-                dependsOn: [
-                    logGroupResource
-                ]
-            })
+            const lambdaFunctionResource = new aws.lambda.Function(
+                this._functionName,
+                lambdaFunctionConfig,
+                {
+                    provider: provider_,
+                    dependsOn: [
+                        logGroupResource
+                    ]
+                })
 
             return lambdaFunctionResource;
         }
@@ -120,12 +115,12 @@ export class ResourceLambda {
      */
     private createCloudWatchForLambda(provider_?: aws.Provider): LogGroup{
         if (provider_ === undefined) {
-            return this._cloudWatchLogGroup = new aws.cloudwatch.LogGroup(this._functionName,{
+            return new aws.cloudwatch.LogGroup(this._functionName,{
                 name: `/aws/lambda/${this._functionName}`,
                 retentionInDays: 14
             });
         } else {
-            return this._cloudWatchLogGroup = new aws.cloudwatch.LogGroup(this._functionName,{
+            return new aws.cloudwatch.LogGroup(this._functionName,{
                 name: `/aws/lambda/${this._functionName}`,
                 retentionInDays: 14
             },{
