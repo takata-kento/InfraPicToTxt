@@ -1,6 +1,7 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 import "mocha";
+import { execSync } from "child_process";
 import { ResourceLambda } from "../lambda/lambda";
 import { describe } from "mocha";
 
@@ -31,6 +32,7 @@ describe(
             function() {
                 before(
                     () => {
+                        execSync("rm -rf ./wordDirfunction_lib_test");
                         provider = new aws.Provider(
                             "privileged",
                             {
@@ -41,6 +43,15 @@ describe(
                                 },
                             }
                         );
+                    }
+                )
+
+                afterEach(
+                    (done) => {
+                        execSync("rm -rf ./wordDirfunction_logformat_test");
+                        execSync("rm -rf ./wordDirfunction_tag_test");
+                        execSync("rm -rf ./wordDirfunction_lib_test");
+                        done();
                     }
                 )
 
@@ -118,6 +129,35 @@ describe(
 
                         // When
                         const lambda_resource = lambda.create(provider, "../lambda/srcLambdaFunc/packages.zip");
+
+                        // Then
+                        pulumi.all([lambda_resource.urn, lambda_resource.handler])
+                              .apply(
+                                ([urn, handler]) => {
+                                    if (!handler){
+                                        done(new Error(`関数が作成されませんでした。urn -> ${urn}`));
+                                    }else {
+                                        done();
+                                    }
+                                }
+                              );
+                    }
+                );
+
+                it(
+                    "### providerを設定しなくてもcreateメソッドでリソースが正常に作成されることを確認します。",
+                    (done) => {
+                        // Given
+                        const tags :aws.Tags = {App: "PicToTxt"};
+                        const lambda = new ResourceLambda(
+                            "arn:aws:iam::123456789012:role/RoleCicdInfraLlmPoc",
+                            "function_lib_test",
+                            "../lambda/srcLambdaFunc/lambda_function.py",
+                            tags
+                        );
+
+                        // When
+                        const lambda_resource = lambda.create(undefined, "../lambda/srcLambdaFunc/packages.zip");
 
                         // Then
                         pulumi.all([lambda_resource.urn, lambda_resource.handler])

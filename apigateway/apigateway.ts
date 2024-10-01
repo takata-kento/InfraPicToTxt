@@ -5,7 +5,7 @@ export interface Route {
     method: apigateway.Method;
     apiPath: string;
     lambda_handler: aws.lambda.Function;
-    lambda_auth_handler: aws.lambda.Function;
+    lambda_auth_handler?: aws.lambda.Function;
 }
 
 export class APIGateway {
@@ -31,10 +31,10 @@ export class APIGateway {
 
     /**
      * API Gatewayを作成します。
-     * @param _provider 
+     * @param _provider?
      * @returns API Gatewayリソース
      */
-    public createAPIGateway(_provider: aws.Provider): apigateway.RestAPI {
+    public createAPIGateway(_provider?: aws.Provider): apigateway.RestAPI {
         let apiGatewayResource: apigateway.RestAPI;
         let routeArgs: apigateway.types.input.RouteArgs[] = [];
 
@@ -48,27 +48,46 @@ export class APIGateway {
 
         this.routes.forEach(
             route => {
-                routeArgs.push({
-                    path: route.apiPath,
-                    eventHandler: route.lambda_handler,
-                    method: route.method,
-                    authorizers: [{
-                        parameterName: "Bearer",
-                        handler: route.lambda_auth_handler
-                    }]
-                });
+                if (route.lambda_auth_handler === undefined) {
+                    routeArgs.push({
+                        path: route.apiPath,
+                        eventHandler: route.lambda_handler,
+                        method: route.method,
+                    });
+                } else {
+                    routeArgs.push({
+                        path: route.apiPath,
+                        eventHandler: route.lambda_handler,
+                        method: route.method,
+                        authorizers: [{
+                            parameterName: "Bearer",
+                            handler: route.lambda_auth_handler
+                        }]
+                    });
+                }
             }
         );
 
-        apiGatewayResource = new apigateway.RestAPI(
-            this.apiName,
-            {
-                routes: routeArgs,
-                stageName: this.stageName,
-                tags: this.tags
-            },
-            {provider: _provider}
-        );
+        if (_provider === undefined) {
+            apiGatewayResource = new apigateway.RestAPI(
+                this.apiName,
+                {
+                    routes: routeArgs,
+                    stageName: this.stageName,
+                    tags: this.tags
+                }
+            );
+        } else {
+            apiGatewayResource = new apigateway.RestAPI(
+                this.apiName,
+                {
+                    routes: routeArgs,
+                    stageName: this.stageName,
+                    tags: this.tags
+                },
+                {provider: _provider}
+            );
+        }
 
         return apiGatewayResource;
     }

@@ -55,50 +55,78 @@ export class ResourceLambda {
 
     /**
      * Lambdaリソースを作成します。
-     * @param provider_ CICD実行ロールにAssumeRoleするためのProvider
+     * @param provider_? CICD実行ロールにAssumeRoleするためのProvider
      * @param pythonLibsZip_ pythonの依存ライブラリを含むzipファイル
      * @returns Lambdaリソースを表すインスタンス
      */
-    public create(provider_: aws.Provider, pythonLibsZip_?: string): Function {
+    public create(provider_?: aws.Provider, pythonLibsZip_?: string): Function {
         const srcZipOutputPath = this.ZIP_ARCHIVE_DIR + this._functionName + ".zip";
-        const srcZipArchiveFile = this.createZipFileArchive(srcZipOutputPath, this._codeFile, pythonLibsZip_);
+        let srcZipArchiveFile
+        if (pythonLibsZip_ === undefined) {
+            srcZipArchiveFile = this.createZipFileArchive(srcZipOutputPath, this._codeFile);
+        } else {
+            srcZipArchiveFile = this.createZipFileArchive(srcZipOutputPath, this._codeFile, pythonLibsZip_);
+        }
         const logGroupResource = this.createCloudWatchForLambda(provider_);
+        const lambdaFunctionConfig = {
+                code: new assert.FileArchive(srcZipOutputPath),
+                name: this._functionName,
+                role: this._iamRole,
+                sourceCodeHash: srcZipArchiveFile.then(archive => archive.outputBase64sha256),
+                handler: "lambdaFunc.lambda_handler",
+                runtime: this.RUNTIME,
+                loggingConfig: {
+                    logFormat: "Text",
+                },
+                timeout: 30,
+                tags: this._tags
+        }
 
-        const lambdaFunctionResource = new aws.lambda.Function(this._functionName,{
-            code: new assert.FileArchive(srcZipOutputPath),
-            name: this._functionName,
-            role: this._iamRole,
-            sourceCodeHash: srcZipArchiveFile.then(archive => archive.outputBase64sha256),
-            handler: "lambdaFunc.lambda_handler",
-            runtime: this.RUNTIME,
-            loggingConfig: {
-                logFormat: "Text",
-            },
-            timeout: 30,
-            tags: this._tags
-        },{
-            provider: provider_,
-            dependsOn: [
-                logGroupResource
-            ]
-        })
-        return lambdaFunctionResource;
+        if (provider_ === undefined) {
+            const lambdaFunctionResource = new aws.lambda.Function(
+                this._functionName,
+                lambdaFunctionConfig,
+                {
+                    dependsOn: [
+                        logGroupResource
+                    ]
+                })
+
+            return lambdaFunctionResource;
+        } else {
+            const lambdaFunctionResource = new aws.lambda.Function(
+                this._functionName,
+                lambdaFunctionConfig,
+                {
+                    provider: provider_,
+                    dependsOn: [
+                        logGroupResource
+                    ]
+                })
+
+            return lambdaFunctionResource;
+        }
     }
 
     /**
      * Lambdaリソース用のCloudWatchロググループを作成します。
-     * @param provider_ CICD実行ロールにAssumeRoleするためのProvider
+     * @param provider_? CICD実行ロールにAssumeRoleするためのProvider
      * @returns CloudWatchLogsのロググループリソースを表すインスタンス
      */
-    private createCloudWatchForLambda(provider_: aws.Provider): LogGroup{
-        this._cloudWatchLogGroup = new aws.cloudwatch.LogGroup(this._functionName,{
-            name: `/aws/lambda/${this._functionName}`,
-            retentionInDays: 14
-        },{
-            provider: provider_
-        });
-    
-        return this._cloudWatchLogGroup;
+    private createCloudWatchForLambda(provider_?: aws.Provider): LogGroup{
+        if (provider_ === undefined) {
+            return new aws.cloudwatch.LogGroup(this._functionName,{
+                name: `/aws/lambda/${this._functionName}`,
+                retentionInDays: 14
+            });
+        } else {
+            return new aws.cloudwatch.LogGroup(this._functionName,{
+                name: `/aws/lambda/${this._functionName}`,
+                retentionInDays: 14
+            },{
+                provider: provider_
+            });
+        }
     }
 
     /**

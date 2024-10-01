@@ -1,0 +1,30 @@
+name: Pulumi
+
+on:
+  - workflow_dispatch
+
+jobs:
+  preview:
+    name: Preview
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v3.5.0
+        with:
+          node-version-file: package.json
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+
+      - run: npm install
+
+      - uses: pulumi/actions@v3
+        with:
+          command: preview
+          stack-name: org-name/stack-name # When using an individual account, only use stack-name.  
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}

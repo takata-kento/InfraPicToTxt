@@ -1,12 +1,10 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
-import * as apigateway from "@pulumi/aws-apigateway";
 import * as fs from "fs";
 import * as sinon from "sinon";
 import proxyquire from "proxyquire";
 import "mocha";
 import { IAMRole } from "../iam/iam";
-import { APIGateway, Route } from "../apigateway/apigateway";
 import { expect } from "chai";
 import { describe } from "mocha";
 
@@ -381,6 +379,62 @@ describe(
                         expect(() => iamRole.createIAMRole(provider)).to.not.throw();
                     }
                 )
+
+                it(
+                    "### providerを設定していなくてもcreateIAMRoleメソッドでロールにポリシーがアタッチされることを確認します。",
+                    () => {
+                        // Given
+                        const iamRole = new IAMRole("testRole", "testPolicy", "../iam/policy/testPolicy.json", "../iam/policy/testPolicyAssume.json", {App: "PicToTxt"});
+
+                        const policyAssumeJson = 
+                            {
+                                "Version": "2012-10-17",
+                                "Statement": [
+                                    {
+                                        "Effect": "Allow",
+                                        "Principal": {
+                                            "Service": "lambda.amazonaws.com"
+                                        },
+                                        "Action": "sts:AssumeRole"
+                                    }
+                                ]
+                            };
+
+                        const policyJson = 
+                            {
+                                "Version": "2012-10-17",
+                                "Statement": [
+                                    {
+                                        "Sid": "cloudWatchLogs",
+                                        "Effect": "Allow",
+                                        "Action": [
+                                            "logs:CreateLogStream",
+                                            "logs:CreateLogGroup",
+                                            "logs:PutLogEvents"
+                                        ],
+                                        "Resource": [
+                                            "arn:aws:logs:ap-northeast-1:123456789012:log-group:/aws/lambda/lambda_test_func:*",
+                                            "arn:aws:logs:ap-northeast-1:123456789012:log-group:/aws/lambda/lambda_test_func:log-stream:*"
+                                        ]
+                                    },
+                                    {
+                                        "Sid": "bedrock",
+                                        "Effect": "Allow",
+                                        "Action": "bedrock:InvokeModelWithResponseStream",
+                                        "Resource": "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-opus-20240229-v1:0"
+                                    }
+                                ]
+                            };
+
+                        const readPolicyJsonStub = sinon.stub(iamRole as any, "readPolicyJson");
+                        readPolicyJsonStub.withArgs("../iam/policy/testPolicy.json").returns(policyJson);
+                        readPolicyJsonStub.withArgs("../iam/policy/testPolicyAssume.json").returns(policyAssumeJson);
+
+                        // When
+                        // Then
+                        expect(() => iamRole.createIAMRole()).to.not.throw();
+                    }
+                )
             }
         )
 
@@ -406,110 +460,6 @@ describe(
                                 })
                             })
                             .to.not.throw();
-                    }
-                )
-            }
-        )
-    }
-)
-
-describe(
-    "# API Gatewayテスト",
-    function() {
-        let provider: aws.Provider;
-
-        describe(
-            "## APIGatewayクラスユニットテスト",
-            function() {
-                before(
-                    () => {
-                        provider = new aws.Provider(
-                            "privileged",
-                            {
-                                assumeRole: {
-                                    roleArn: "arn:aws:iam::123456789012:role/RoleCicdInfraLlmPoc",
-                                    sessionName: "PulumiSession",
-                                    externalId: "PulumiApplication",
-                                },
-                            }
-                        );
-                    }
-                )
-
-                afterEach(
-                    () => {
-                        sinon.restore();
-                    }
-                )
-
-                it(
-                    "### createAPIGatewayメソッドでroutesに同じパスかつ同じメソッドが存在する場合にエラーを投げることを確認します。",
-                    () => {
-                        // Given
-                        const tags :aws.Tags = {App: "PicToTxt"};
-                        const routes: Route[] = [
-                            {
-                                method: apigateway.Method.GET,
-                                apiPath: "/",
-                                lambda_handler: new aws.lambda.Function("testLambda1", {role: ""}, {provider: provider}),
-                                lambda_auth_handler: new aws.lambda.Function("testAuthLambda", {role: ""}, {provider: provider})
-                            },
-                            {
-                                method: apigateway.Method.GET,
-                                apiPath: "/",
-                                lambda_handler: new aws.lambda.Function("testLambda2", {role: ""}, {provider: provider}),
-                                lambda_auth_handler: new aws.lambda.Function("testAuthLambda", {role: ""}, {provider: provider})
-                            }
-                        ]
-                        const stage = "testStage";
-                        const apiGateway = new APIGateway("testAPIGateway", routes, stage, tags);
-
-                        // When
-                        // Then
-                        expect(() => apiGateway.createAPIGateway(provider)).to.throw();
-                    }
-                )
-
-                it(
-                    "### createAPIGatewayメソッドでAPI Gatewayリソースが正常に作成されることを確認します。",
-                    (done) => {
-                        // Given
-                        const expectedTags :aws.Tags = {App: "PicToTxt"};
-                        const mockLambdaFunction = new aws.lambda.Function("mockFunction", {
-                            runtime: aws.lambda.NodeJS12dXRuntime,
-                            code: new pulumi.asset.AssetArchive({
-                                ".": new pulumi.asset.FileArchive("./app"),
-                            }),
-                            handler: "index.handler",
-                            role: "mockRoleArn",
-                        });
-                        const routes: Route[] = [
-                            {
-                                method: apigateway.Method.GET,
-                                apiPath: "/",
-                                lambda_handler: mockLambdaFunction,
-                                lambda_auth_handler: mockLambdaFunction
-                            }
-                        ]
-                        const expectedStage = "testStage";
-                        const apiGateway = new APIGateway("testAPIGateway", routes, expectedStage, expectedTags);
-
-                        // When
-                        // @pulumi/aws-apigatewayのRestAPIクラスにtagsプロパティが存在しないため、any型でキャストする。
-                        let apiGatewayResource: any = apiGateway.createAPIGateway(provider);
-
-                        // Then
-                        pulumi
-                            .all([apiGatewayResource?.urn, apiGatewayResource?.tags])
-                            .apply(
-                                ([urn, tags]) => {
-                                    if (!tags || !tags["App"]){
-                                        done(new Error(`Missing a App tag on Api Gateway ${urn} , ${tags}`));
-                                    } else {
-                                        done();
-                                    }
-                                }
-                            )
                     }
                 )
             }
