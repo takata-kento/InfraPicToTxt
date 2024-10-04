@@ -3,6 +3,11 @@ name: Pulumi
 on:
   - workflow_dispatch
 
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
 jobs:
   preview:
     name: Preview
